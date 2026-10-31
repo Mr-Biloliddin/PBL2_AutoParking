@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <LangVersion>7.3</LangVersion>
+    <RootNamespace>OnlineAutoParking</RootNamespace>
+    <AssemblyName>OnlineAutoParking</AssemblyName>
+    <AssemblyTitle>Online AutoParking</AssemblyTitle>
+    <Product>Online AutoParking</Product>
+    <Version>1.0.0</Version>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- SQLite provayderi (o'zi bilan e_sqlite3.dll native kutubxonasini olib keladi) -->
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
+    <!-- .NET Framework 4.8 targeting pack o'rnatilmagan kompyuterda ham build qilish uchun -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="MainForm.cs" SubType="Form" />
+    <Compile Update="MainForm.Designer.cs" DependentUpon="MainForm.cs" />
+    <Compile Update="BookingForm.cs" SubType="Form" />
+    <Compile Update="BookingForm.Designer.cs" DependentUpon="BookingForm.cs" />
+    <Compile Update="AdminForm.cs" SubType="Form" />
+    <Compile Update="AdminForm.Designer.cs" DependentUpon="AdminForm.cs" />
+    <Compile Update="LoginForm.cs" SubType="Form" />
+    <Compile Update="LoginForm.Designer.cs" DependentUpon="LoginForm.cs" />
+  </ItemGroup>
+
+</Project>

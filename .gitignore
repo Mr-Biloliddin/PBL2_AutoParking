@@ -1,0 +1,10 @@
+# Build output
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+# Local SQLite databases
+*.db
+*.db-journal

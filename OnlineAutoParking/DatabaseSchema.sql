@@ -56,6 +56,25 @@ WHERE Role = 'Admin';
 -- Bronni qilgan foydalanuvchi (eski bronlarda NULL). Dastur eski bazaga avtomatik qo'shadi:
 -- ALTER TABLE Bookings ADD COLUMN UserID INTEGER NULL REFERENCES Users(UserID);
 
+-- 4. Foydalanuvchi mashinalari (bir foydalanuvchida bir nechta mashina bo'lishi mumkin;
+--    bitta raqam bazada faqat bir marta uchraydi)
+CREATE TABLE IF NOT EXISTS Cars (
+    CarID INTEGER PRIMARY KEY AUTOINCREMENT,
+    UserID INTEGER NOT NULL,
+    CarPlate TEXT NOT NULL UNIQUE,
+    CarName TEXT NOT NULL DEFAULT '',
+    CreatedAt TEXT NOT NULL,
+    FOREIGN KEY (UserID)
+        REFERENCES Users(UserID)
+);
+
+CREATE INDEX IF NOT EXISTS
+idx_cars_user
+ON Cars (UserID);
+
+-- Bron qaysi mashina bilan qilingani (eski bronlarda NULL). Dastur eski bazaga avtomatik qo'shadi:
+-- ALTER TABLE Bookings ADD COLUMN CarID INTEGER NULL REFERENCES Cars(CarID);
+
 -- Administrator hisobi dastur tomonidan yaratiladi (parol xeshlanadi):
 --     login: admin   parol: admin123
 -- Ro'yxatdan o'tish oynasi orqali faqat oddiy foydalanuvchilar (Role = 'User') yaratiladi.
@@ -76,7 +95,7 @@ ON Bookings (
 --     ('Chilonzor Parking', 'Toshkent, Chilonzor', 15),
 --     ('Yunusobod Parking', 'Toshkent, Yunusobod', 20),
 --     ('Sergeli Parking',   'Toshkent, Sergeli',   10);
--- PRAGMA user_version = 2;   (1 — parking/bronlar, 2 — foydalanuvchilar)
+-- PRAGMA user_version = 3;   (1 — parking/bronlar, 2 — foydalanuvchilar, 3 — mashinalar)
 
 
 -- =====================================================================

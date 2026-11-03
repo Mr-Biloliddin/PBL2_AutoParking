@@ -27,6 +27,8 @@
     <Compile Update="MainForm.Designer.cs" DependentUpon="MainForm.cs" />
     <Compile Update="BookingForm.cs" SubType="Form" />
     <Compile Update="BookingForm.Designer.cs" DependentUpon="BookingForm.cs" />
+    <Compile Update="CarsForm.cs" SubType="Form" />
+    <Compile Update="CarsForm.Designer.cs" DependentUpon="CarsForm.cs" />
     <Compile Update="AdminForm.cs" SubType="Form" />
     <Compile Update="AdminForm.Designer.cs" DependentUpon="AdminForm.cs" />
     <Compile Update="LoginForm.cs" SubType="Form" />

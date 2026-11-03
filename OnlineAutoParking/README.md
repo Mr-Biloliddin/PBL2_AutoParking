@@ -121,13 +121,21 @@ Formalar standart WinForms designer usulida yozilgan (`partial class` + `Initial
 - **“Yangilash”** jadvalni bazadan qayta o‘qiydi. **“Admin panel”** AdminForm’ni ochadi.
 - Ikkala oyna ham modal (`ShowDialog`) ochiladi, shuning uchun bir vaqtda faqat bittasi ochiq bo‘ladi. Oyna yopilgach jadval avtomatik yangilanadi.
 
+### CarsForm — “Mening mashinalarim”
+
+- MainForm’dagi **“Mening mashinalarim”** tugmasi orqali ochiladi. Har bir foydalanuvchi faqat o‘z mashinalarini ko‘radi va boshqaradi; bir foydalanuvchida bir nechta mashina bo‘lishi mumkin.
+- **Qo‘shish:** raqam (majburiy) va nom/model (ixtiyoriy). Raqam formati avvalgidek tekshiriladi (`## A###AA` yoki `## ###AAA`), katta harfga o‘tkaziladi va yagona ko‘rinishga keltiriladi (`01 A123BC`). Bitta raqamni bazada faqat bitta foydalanuvchi ro‘yxatdan o‘tkaza oladi.
+- **O‘chirish:** tugamagan faol broni bor mashinani o‘chirib bo‘lmaydi. Eski bronlar tarixda qoladi (raqam bronning o‘zida ham saqlanadi).
+- Ma’lumotlar bazada `Cars` jadvalida, `Bookings.CarID` esa bron qaysi mashina bilan qilinganini bildiradi. Eski bronlarda `CarID` bo‘sh (NULL) bo‘ladi.
+
 ### BookingForm — “Joy band qilish”
 
 ![Joy band qilish](docs/booking-form.png)
 
 - Tanlangan avtoturargoh nomi, manzili va sig‘imi ko‘rsatiladi.
 - Vaqt o‘zgartirilganda bo‘sh joylar soni darhol qayta hisoblanadi.
-- **Tekshiruvlar:** ism bo‘sh emas; raqam bo‘sh emas (avtomatik katta harfga o‘tkaziladi, ortiqcha bo‘shliqlar olib tashlanadi); boshlanish vaqti o‘tib ketmagan; tugash vaqti boshlanishdan keyin; avtoturargoh mavjud va faol; bo‘sh joy > 0.
+- **Mashina tanlash:** raqam endi qo‘lda yozilmaydi — foydalanuvchi o‘z mashinalari ro‘yxatidan tanlaydi. Bitta mashina bo‘lsa u avtomatik tanlanadi, ikki va undan ko‘p bo‘lsa foydalanuvchi o‘zi tanlashi shart. Mashina yo‘q bo‘lsa, avval mashina qo‘shish taklif qilinadi.
+- **Tekshiruvlar:** ism bo‘sh emas; mashina tanlangan; boshlanish vaqti o‘tib ketmagan; tugash vaqti boshlanishdan keyin; avtoturargoh mavjud va faol; bo‘sh joy > 0.
 - **“Bronni tasdiqlash”** bosilganda `BookingRepository.CreateBooking` ishga tushadi (5-bo‘limga qarang). Muvaffaqiyatli bo‘lsa:
   `Joy muvaffaqiyatli band qilindi!  Bron raqami: N`
   Joy qolmagan bo‘lsa: `Uzr, tanlangan vaqt uchun bo‘sh joy mavjud emas.`

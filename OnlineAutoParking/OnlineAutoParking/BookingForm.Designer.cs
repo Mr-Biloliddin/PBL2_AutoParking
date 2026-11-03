@@ -32,7 +32,7 @@ namespace OnlineAutoParking
             this.lblDriverName = new System.Windows.Forms.Label();
             this.txtDriverName = new System.Windows.Forms.TextBox();
             this.lblCarPlate = new System.Windows.Forms.Label();
-            this.txtCarPlate = new System.Windows.Forms.TextBox();
+            this.cmbCar = new System.Windows.Forms.ComboBox();
             this.lblPlateHint = new System.Windows.Forms.Label();
             this.lblStart = new System.Windows.Forms.Label();
             this.dtpStart = new System.Windows.Forms.DateTimePicker();
@@ -80,7 +80,7 @@ namespace OnlineAutoParking
             this.tlpFields.Controls.Add(this.lblDriverName, 0, 2);
             this.tlpFields.Controls.Add(this.txtDriverName, 1, 2);
             this.tlpFields.Controls.Add(this.lblCarPlate, 0, 3);
-            this.tlpFields.Controls.Add(this.txtCarPlate, 1, 3);
+            this.tlpFields.Controls.Add(this.cmbCar, 1, 3);
             this.tlpFields.Controls.Add(this.lblPlateHint, 1, 4);
             this.tlpFields.Controls.Add(this.lblStart, 0, 5);
             this.tlpFields.Controls.Add(this.dtpStart, 1, 5);
@@ -167,18 +167,19 @@ namespace OnlineAutoParking
             this.lblCarPlate.Name = "lblCarPlate";
             this.lblCarPlate.Size = new System.Drawing.Size(119, 17);
             this.lblCarPlate.TabIndex = 4;
-            this.lblCarPlate.Text = "Avtomobil raqami";
+            this.lblCarPlate.Text = "Mashina";
             //
-            // txtCarPlate
+            // cmbCar
             //
-            this.txtCarPlate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCarPlate.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.txtCarPlate.Location = new System.Drawing.Point(212, 113);
-            this.txtCarPlate.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
-            this.txtCarPlate.MaxLength = 20;
-            this.txtCarPlate.Name = "txtCarPlate";
-            this.txtCarPlate.Size = new System.Drawing.Size(295, 25);
-            this.txtCarPlate.TabIndex = 1;
+            this.cmbCar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbCar.DisplayMember = "DisplayText";
+            this.cmbCar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbCar.FormattingEnabled = true;
+            this.cmbCar.Location = new System.Drawing.Point(212, 113);
+            this.cmbCar.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
+            this.cmbCar.Name = "cmbCar";
+            this.cmbCar.Size = new System.Drawing.Size(295, 25);
+            this.cmbCar.TabIndex = 1;
             //
             // lblPlateHint
             //
@@ -190,7 +191,7 @@ namespace OnlineAutoParking
             this.lblPlateHint.Name = "lblPlateHint";
             this.lblPlateHint.Size = new System.Drawing.Size(190, 13);
             this.lblPlateHint.TabIndex = 5;
-            this.lblPlateHint.Text = "Format: 01 A123AA yoki 01 123AAA";
+            this.lblPlateHint.Text = "";
             //
             // lblStart
             //
@@ -343,7 +344,7 @@ namespace OnlineAutoParking
         private System.Windows.Forms.Label lblDriverName;
         private System.Windows.Forms.TextBox txtDriverName;
         private System.Windows.Forms.Label lblCarPlate;
-        private System.Windows.Forms.TextBox txtCarPlate;
+        private System.Windows.Forms.ComboBox cmbCar;
         private System.Windows.Forms.Label lblPlateHint;
         private System.Windows.Forms.Label lblStart;
         private System.Windows.Forms.DateTimePicker dtpStart;

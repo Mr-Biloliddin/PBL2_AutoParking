@@ -75,7 +75,9 @@ shu faylni `PBL2_AutoParking` papkasiga ko'chirib qo'ying.
 1. **Bosh sahifa (MainForm)** — boshlanish va tugash vaqtini tanlang, so'ng **Bo'sh joylarni tekshirish** tugmasini bosing.
    Jadvalda har bir avtoturargohdagi bo'sh joylar soni ko'rinadi.
 2. **Joy band qilish (BookingForm)** — avtoturargoh qatorini ikki marta bosing yoki **Joy band qilish** tugmasini bosing.
-   Haydovchi ismi va mashina raqamini kiriting, so'ng **Bronni tasdiqlash** tugmasini bosing.
+   Avval **Mening mashinalarim** tugmasi orqali mashinangizni (raqam, ixtiyoriy nom) qo'shib qo'ying.
+   Bron oynasida haydovchi ismini kiriting va mashinani tanlang (bitta mashina bo'lsa u avtomatik tanlanadi,
+   ikki va undan ko'p bo'lsa o'zingiz tanlaysiz), so'ng **Bronni tasdiqlash** tugmasini bosing.
    Bron bazaga yoziladi va sizga bron raqami ko'rsatiladi.
 3. **Administrator paneli (AdminForm)** — **Admin panel** tugmasi orqali ochiladi:
    - avtoturargohlar: **Qo'shish**, **Tahrirlash**, **Faolsizlantirish**;

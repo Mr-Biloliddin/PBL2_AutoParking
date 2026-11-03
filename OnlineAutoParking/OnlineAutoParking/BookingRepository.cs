@@ -14,7 +14,8 @@ namespace OnlineAutoParking
         NoSpace,
         ParkingNotFound,
         ParkingInactive,
-        InvalidInterval
+        InvalidInterval,
+        CarNotFound     // Mashina topilmadi yoki bu foydalanuvchiga tegishli emas
     }
 
     /// <summary>
@@ -24,9 +25,10 @@ namespace OnlineAutoParking
     {
         /// <summary>
         /// Yangi bron yaratadi. Bo'sh joy borligi shu tranzaksiya ichida qayta tekshiriladi —
-        /// MainForm'da ko'rsatilgan raqamga ishonilmaydi. userId — bronni qilgan foydalanuvchi.
+        /// MainForm'da ko'rsatilgan raqamga ishonilmaydi. userId — bronni qilgan foydalanuvchi,
+        /// carId — shu foydalanuvchining tanlangan mashinasi (raqam Cars jadvalidan olinadi).
         /// </summary>
-        public CreateBookingStatus CreateBooking(int userId, int parkingLotId, string driverName, string carPlate,
+        public CreateBookingStatus CreateBooking(int userId, int carId, int parkingLotId, string driverName,
             DateTime startTime, DateTime endTime, out int bookingId)
         {
             bookingId = 0;
@@ -46,6 +48,27 @@ namespace OnlineAutoParking
             {
                 try
                 {
+                    // Mashina shu foydalanuvchiniki ekanini tekshiramiz (boshqa odamning mashinasi bilan bron qilib bo'lmaydi)
+                    string carPlate = null;
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.Transaction = transaction;
+                        command.CommandText = "SELECT CarPlate FROM Cars WHERE CarID = @CarID AND UserID = @UserID;";
+                        command.Parameters.AddWithValue("@CarID", carId);
+                        command.Parameters.AddWithValue("@UserID", userId);
+                        object plate = command.ExecuteScalar();
+                        if (plate != null)
+                        {
+                            carPlate = Convert.ToString(plate);
+                        }
+                    }
+
+                    if (carPlate == null)
+                    {
+                        transaction.Rollback();
+                        return CreateBookingStatus.CarNotFound;
+                    }
+
                     bool found = false;
                     int totalSpaces = 0;
                     bool isActive = false;
@@ -90,10 +113,11 @@ namespace OnlineAutoParking
                     {
                         command.Transaction = transaction;
                         command.CommandText =
-                            "INSERT INTO Bookings (UserID, ParkingLotID, DriverName, CarPlate, StartTime, EndTime, Status) " +
-                            "VALUES (@UserID, @ParkingLotID, @DriverName, @CarPlate, @StartTime, @EndTime, @Status); " +
+                            "INSERT INTO Bookings (UserID, CarID, ParkingLotID, DriverName, CarPlate, StartTime, EndTime, Status) " +
+                            "VALUES (@UserID, @CarID, @ParkingLotID, @DriverName, @CarPlate, @StartTime, @EndTime, @Status); " +
                             "SELECT last_insert_rowid();";
                         command.Parameters.AddWithValue("@UserID", userId);
+                        command.Parameters.AddWithValue("@CarID", carId);
                         command.Parameters.AddWithValue("@ParkingLotID", parkingLotId);
                         command.Parameters.AddWithValue("@DriverName", driverName);
                         command.Parameters.AddWithValue("@CarPlate", carPlate);

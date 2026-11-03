@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -11,15 +12,12 @@ namespace OnlineAutoParking
     /// </summary>
     public partial class BookingForm : Form
     {
-        // Bo'shliqlarsiz raqam: "01A123AA" (## A###AA) yoki "01123AAA" (## ###AAA)
-        private static readonly Regex PlateLetterFirst = new Regex(@"^(\d{2})([A-Z]\d{3}[A-Z]{2})$");
-        private static readonly Regex PlateDigitsFirst = new Regex(@"^(\d{2})(\d{3}[A-Z]{3})$");
-
         // Ism: faqat harflar, bo'shliq, tire va apostrof (O'g'li, G‘ulom). Raqam va boshqa belgilar mumkin emas.
         private static readonly Regex DriverNamePattern = new Regex(@"^\p{L}+(?:[ \-'‘’ʻʼ`]+\p{L}+)*$");
 
         private readonly ParkingRepository _parkingRepository = new ParkingRepository();
         private readonly BookingRepository _bookingRepository = new BookingRepository();
+        private readonly CarRepository _carRepository = new CarRepository();
         private readonly int _parkingLotId;
         private ParkingLot _parkingLot;
 
@@ -66,10 +64,70 @@ namespace OnlineAutoParking
                 txtDriverName.Text = Session.CurrentUser.FullName;
             }
 
+            // Foydalanuvchining mashinalari yuklanadi (bo'lmasa avval mashina qo'shish taklif qilinadi)
+            if (!LoadCars())
+            {
+                BeginInvoke(new MethodInvoker(Close));
+                return;
+            }
+
             lblParkingName.Text = _parkingLot.ParkingName;
             lblParkingAddress.Text = _parkingLot.Address + "  •  jami " + _parkingLot.TotalSpaces + " ta joy";
             UpdateAvailability();
             txtDriverName.Focus();
+        }
+
+        /// <summary>
+        /// Foydalanuvchining mashinalarini ro'yxatga yuklaydi. Bitta mashina bo'lsa u avtomatik tanlanadi,
+        /// ikki va undan ko'p bo'lsa foydalanuvchi o'zi tanlashi shart. Mashina yo'q bo'lsa va foydalanuvchi
+        /// qo'shmasa — false qaytaradi (bron qilib bo'lmaydi).
+        /// </summary>
+        private bool LoadCars()
+        {
+            List<Car> cars;
+            try
+            {
+                cars = _carRepository.GetCarsByUser(Session.CurrentUser.UserID);
+
+                if (cars.Count == 0)
+                {
+                    DialogResult answer = MessageBox.Show(
+                        "Sizda hali mashina qo‘shilmagan. Joy band qilish uchun avval mashinangizni qo‘shing.\n\n" +
+                        "Hozir mashina qo‘shasizmi?",
+                        "Mashina kerak", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    if (answer == DialogResult.Yes)
+                    {
+                        using (var carsForm = new CarsForm())
+                        {
+                            carsForm.ShowDialog(this);
+                        }
+                        cars = _carRepository.GetCarsByUser(Session.CurrentUser.UserID);
+                    }
+                    if (cars.Count == 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Mashinalarni o‘qib bo‘lmadi.\n\n" + ex.Message,
+                    "Xatolik", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            cmbCar.DataSource = cars;
+            if (cars.Count == 1)
+            {
+                cmbCar.SelectedIndex = 0;
+                lblPlateHint.Text = "Sizda 1 ta mashina bor — avtomatik tanlandi.";
+            }
+            else
+            {
+                cmbCar.SelectedIndex = -1; // Qaysi biri bilan borishini foydalanuvchi o'zi tanlaydi
+                lblPlateHint.Text = "Sizda " + cars.Count + " ta mashina bor — qaysi biri bilan borishingizni tanlang.";
+            }
+            return true;
         }
 
         private void dtpInterval_ValueChanged(object sender, EventArgs e)
@@ -114,7 +172,6 @@ namespace OnlineAutoParking
         {
             // Ortiqcha bo'shliqlar bitta bo'shliqqa almashtiriladi: "  Ali   Valiyev " -> "Ali Valiyev"
             string driverName = Regex.Replace(txtDriverName.Text.Trim(), @"\s+", " ");
-            string rawPlate = txtCarPlate.Text.Trim();
             DateTime start = DatabaseHelper.TruncateToMinute(dtpStart.Value);
             DateTime end = DatabaseHelper.TruncateToMinute(dtpEnd.Value);
 
@@ -135,18 +192,10 @@ namespace OnlineAutoParking
                     "(bo‘shliq, tire va apostrof ruxsat etiladi).", txtDriverName);
                 return;
             }
-            if (rawPlate.Length == 0)
+            var car = cmbCar.SelectedItem as Car;
+            if (car == null)
             {
-                ShowValidation("Avtomobil raqamini kiriting.", txtCarPlate);
-                return;
-            }
-            string carPlate = NormalizeCarPlate(rawPlate);
-            if (carPlate == null)
-            {
-                ShowValidation("Avtomobil raqami noto‘g‘ri formatda.\n\n" +
-                    "Ruxsat etilgan formatlar:\n" +
-                    "  ## A###AA   (masalan: 01 A123BC)\n" +
-                    "  ## ###AAA   (masalan: 01 123ABC)", txtCarPlate);
+                ShowValidation("Qaysi mashina bilan parkingga borishingizni tanlang.", cmbCar);
                 return;
             }
             if (start < DatabaseHelper.TruncateToMinute(DateTime.Now))
@@ -167,14 +216,15 @@ namespace OnlineAutoParking
                 // 5-6. Avtoturargoh holati va bo'sh joy tranzaksiya ichida qayta tekshiriladi
                 int bookingId;
                 CreateBookingStatus status = _bookingRepository.CreateBooking(
-                    Session.CurrentUser.UserID, _parkingLotId, driverName, carPlate, start, end, out bookingId);
+                    Session.CurrentUser.UserID, car.CarID, _parkingLotId, driverName, start, end, out bookingId);
 
                 switch (status)
                 {
                     case CreateBookingStatus.Success:
                         CreatedBookingId = bookingId;
                         MessageBox.Show(
-                            "Joy muvaffaqiyatli band qilindi!\n\nBron raqami: " + bookingId,
+                            "Joy muvaffaqiyatli band qilindi!\n\nBron raqami: " + bookingId +
+                            "\nMashina: " + car.CarPlate,
                             "Muvaffaqiyatli", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         DialogResult = DialogResult.OK;
                         Close();
@@ -195,6 +245,16 @@ namespace OnlineAutoParking
                             "Joy band qilish", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         break;
 
+                    case CreateBookingStatus.CarNotFound:
+                        MessageBox.Show("Tanlangan mashina topilmadi (o‘chirilgan bo‘lishi mumkin). Ro‘yxat yangilanadi.",
+                            "Joy band qilish", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        if (!LoadCars())
+                        {
+                            Close();
+                            return;
+                        }
+                        break;
+
                     case CreateBookingStatus.InvalidInterval:
                         MessageBox.Show("Tugash vaqti boshlanish vaqtidan keyin bo‘lishi kerak.",
                             "Noto‘g‘ri vaqt", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -213,21 +273,6 @@ namespace OnlineAutoParking
             }
 
             UpdateAvailability();
-        }
-
-        /// <summary>
-        /// Raqamni tekshiradi va yagona ko'rinishga keltiradi: "01 a 123 bc" -> "01 A123BC",
-        /// "01123abc" -> "01 123ABC". Format mos kelmasa null qaytaradi.
-        /// </summary>
-        private static string NormalizeCarPlate(string input)
-        {
-            string compact = Regex.Replace(input, @"[\s\-]+", "").ToUpperInvariant();
-            Match match = PlateLetterFirst.Match(compact);
-            if (!match.Success)
-            {
-                match = PlateDigitsFirst.Match(compact);
-            }
-            return match.Success ? match.Groups[1].Value + " " + match.Groups[2].Value : null;
         }
 
         private static void ShowValidation(string message, Control control)

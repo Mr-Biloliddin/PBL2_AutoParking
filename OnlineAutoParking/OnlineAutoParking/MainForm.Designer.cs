@@ -35,6 +35,7 @@ namespace OnlineAutoParking
             this.lblIntervalInfo = new System.Windows.Forms.Label();
             this.flpButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.btnBook = new System.Windows.Forms.Button();
+            this.btnMyCars = new System.Windows.Forms.Button();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.btnLogout = new System.Windows.Forms.Button();
             this.lblDatabasePath = new System.Windows.Forms.Label();
@@ -188,6 +189,7 @@ namespace OnlineAutoParking
             //
             this.flpButtons.AutoSize = true;
             this.flpButtons.Controls.Add(this.btnBook);
+            this.flpButtons.Controls.Add(this.btnMyCars);
             this.flpButtons.Controls.Add(this.btnRefresh);
             this.flpButtons.Controls.Add(this.btnLogout);
             this.flpButtons.Controls.Add(this.lblDatabasePath);
@@ -214,6 +216,21 @@ namespace OnlineAutoParking
             this.btnBook.UseVisualStyleBackColor = false;
             this.btnBook.Click += new System.EventHandler(this.btnBook_Click);
             //
+            // btnMyCars
+            //
+            this.btnMyCars.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.btnMyCars.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnMyCars.FlatAppearance.BorderSize = 0;
+            this.btnMyCars.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMyCars.ForeColor = System.Drawing.Color.White;
+            this.btnMyCars.Location = new System.Drawing.Point(216, 9);
+            this.btnMyCars.Name = "btnMyCars";
+            this.btnMyCars.Size = new System.Drawing.Size(190, 42);
+            this.btnMyCars.TabIndex = 1;
+            this.btnMyCars.Text = "Mening mashinalarim";
+            this.btnMyCars.UseVisualStyleBackColor = false;
+            this.btnMyCars.Click += new System.EventHandler(this.btnMyCars_Click);
+            //
             // btnRefresh
             //
             this.btnRefresh.BackColor = System.Drawing.Color.White;
@@ -221,10 +238,10 @@ namespace OnlineAutoParking
             this.btnRefresh.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(203)))), ((int)(((byte)(213)))), ((int)(((byte)(225)))));
             this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRefresh.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(41)))), ((int)(((byte)(55)))));
-            this.btnRefresh.Location = new System.Drawing.Point(216, 9);
+            this.btnRefresh.Location = new System.Drawing.Point(412, 9);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(140, 42);
-            this.btnRefresh.TabIndex = 1;
+            this.btnRefresh.TabIndex = 2;
             this.btnRefresh.Text = "Yangilash";
             this.btnRefresh.UseVisualStyleBackColor = false;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
@@ -236,10 +253,10 @@ namespace OnlineAutoParking
             this.btnLogout.FlatAppearance.BorderSize = 0;
             this.btnLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLogout.ForeColor = System.Drawing.Color.White;
-            this.btnLogout.Location = new System.Drawing.Point(362, 9);
+            this.btnLogout.Location = new System.Drawing.Point(558, 9);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(160, 42);
-            this.btnLogout.TabIndex = 2;
+            this.btnLogout.TabIndex = 3;
             this.btnLogout.Text = "Chiqish";
             this.btnLogout.UseVisualStyleBackColor = false;
             this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
@@ -249,11 +266,11 @@ namespace OnlineAutoParking
             this.lblDatabasePath.AutoSize = true;
             this.lblDatabasePath.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDatabasePath.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(107)))), ((int)(((byte)(114)))), ((int)(((byte)(128)))));
-            this.lblDatabasePath.Location = new System.Drawing.Point(540, 22);
+            this.lblDatabasePath.Location = new System.Drawing.Point(736, 22);
             this.lblDatabasePath.Margin = new System.Windows.Forms.Padding(15, 16, 3, 0);
             this.lblDatabasePath.Name = "lblDatabasePath";
             this.lblDatabasePath.Size = new System.Drawing.Size(0, 13);
-            this.lblDatabasePath.TabIndex = 3;
+            this.lblDatabasePath.TabIndex = 4;
             //
             // pnlGrid
             //
@@ -365,6 +382,7 @@ namespace OnlineAutoParking
         private System.Windows.Forms.Label lblIntervalInfo;
         private System.Windows.Forms.FlowLayoutPanel flpButtons;
         private System.Windows.Forms.Button btnBook;
+        private System.Windows.Forms.Button btnMyCars;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.Button btnLogout;
         private System.Windows.Forms.Label lblDatabasePath;

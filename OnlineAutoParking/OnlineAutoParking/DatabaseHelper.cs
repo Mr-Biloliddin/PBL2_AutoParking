@@ -18,8 +18,9 @@ namespace OnlineAutoParking
         private const string DbTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'";
 
         // PRAGMA user_version orqali saqlanadigan sxema versiyasi (initsializatsiya belgisi):
-        // 1 — avtoturargohlar va bronlar, 2 — foydalanuvchilar (Users) va Bookings.UserID
-        private const int SchemaVersion = 2;
+        // 1 — avtoturargohlar va bronlar, 2 — foydalanuvchilar (Users) va Bookings.UserID,
+        // 3 — foydalanuvchi mashinalari (Cars) va Bookings.CarID
+        private const int SchemaVersion = 3;
 
         // Yagona administrator hisobi (birinchi ishga tushishda yaratiladi)
         private const string AdminUsername = "admin";
@@ -159,7 +160,22 @@ CREATE TABLE IF NOT EXISTS Users (
 CREATE UNIQUE INDEX IF NOT EXISTS
 idx_users_single_admin
 ON Users (Role)
-WHERE Role = 'Admin';");
+WHERE Role = 'Admin';
+
+-- Foydalanuvchilarning mashinalari (bir foydalanuvchida bir nechta mashina bo'lishi mumkin)
+CREATE TABLE IF NOT EXISTS Cars (
+    CarID INTEGER PRIMARY KEY AUTOINCREMENT,
+    UserID INTEGER NOT NULL,
+    CarPlate TEXT NOT NULL UNIQUE,
+    CarName TEXT NOT NULL DEFAULT '',
+    CreatedAt TEXT NOT NULL,
+    FOREIGN KEY (UserID)
+        REFERENCES Users(UserID)
+);
+
+CREATE INDEX IF NOT EXISTS
+idx_cars_user
+ON Cars (UserID);");
 
                     // Eski bazalarda (1-versiya) Bookings jadvalida UserID ustuni yo'q — qo'shiladi.
                     // Eski bronlar uchun UserID = NULL bo'lib qoladi.
@@ -167,6 +183,14 @@ WHERE Role = 'Admin';");
                     {
                         ExecuteNonQuery(connection, transaction,
                             "ALTER TABLE Bookings ADD COLUMN UserID INTEGER NULL REFERENCES Users(UserID);");
+                    }
+
+                    // Eski bazalarda (2-versiya) Bookings jadvalida CarID ustuni yo'q — qo'shiladi.
+                    // Eski bronlarda CarID = NULL bo'lib qoladi (raqam CarPlate matnida saqlanib turadi).
+                    if (!ColumnExists(connection, transaction, "Bookings", "CarID"))
+                    {
+                        ExecuteNonQuery(connection, transaction,
+                            "ALTER TABLE Bookings ADD COLUMN CarID INTEGER NULL REFERENCES Cars(CarID);");
                     }
 
                     long version = Convert.ToInt64(

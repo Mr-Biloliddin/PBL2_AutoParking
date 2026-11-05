@@ -1,4 +1,4 @@
-namespace OnlineAutoParking
+﻿namespace OnlineAutoParking
 {
     partial class MainForm
     {
@@ -24,6 +24,7 @@ namespace OnlineAutoParking
         private void InitializeComponent()
         {
             this.pnlHeader = new System.Windows.Forms.Panel();
+            this.btnRegister = new System.Windows.Forms.Button();
             this.lblSubtitle = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
             this.tlpFilter = new System.Windows.Forms.TableLayoutPanel();
@@ -38,6 +39,7 @@ namespace OnlineAutoParking
             this.btnMyCars = new System.Windows.Forms.Button();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.btnLogout = new System.Windows.Forms.Button();
+            this.btnExit = new System.Windows.Forms.Button();
             this.lblDatabasePath = new System.Windows.Forms.Label();
             this.pnlGrid = new System.Windows.Forms.Panel();
             this.dgvParkingLots = new System.Windows.Forms.DataGridView();
@@ -56,6 +58,7 @@ namespace OnlineAutoParking
             // pnlHeader
             //
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(35)))), ((int)(((byte)(56)))));
+            this.pnlHeader.Controls.Add(this.btnRegister);
             this.pnlHeader.Controls.Add(this.lblSubtitle);
             this.pnlHeader.Controls.Add(this.lblTitle);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
@@ -63,6 +66,23 @@ namespace OnlineAutoParking
             this.pnlHeader.Name = "pnlHeader";
             this.pnlHeader.Size = new System.Drawing.Size(984, 92);
             this.pnlHeader.TabIndex = 0;
+            //
+            // btnRegister
+            //
+            this.btnRegister.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRegister.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(163)))), ((int)(((byte)(74)))));
+            this.btnRegister.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnRegister.FlatAppearance.BorderSize = 0;
+            this.btnRegister.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRegister.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRegister.ForeColor = System.Drawing.Color.White;
+            this.btnRegister.Location = new System.Drawing.Point(792, 13);
+            this.btnRegister.Name = "btnRegister";
+            this.btnRegister.Size = new System.Drawing.Size(172, 38);
+            this.btnRegister.TabIndex = 2;
+            this.btnRegister.Text = "Ro‘yxatdan o‘tish";
+            this.btnRegister.UseVisualStyleBackColor = false;
+            this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
             //
             // lblSubtitle
             //
@@ -192,6 +212,7 @@ namespace OnlineAutoParking
             this.flpButtons.Controls.Add(this.btnMyCars);
             this.flpButtons.Controls.Add(this.btnRefresh);
             this.flpButtons.Controls.Add(this.btnLogout);
+            this.flpButtons.Controls.Add(this.btnExit);
             this.flpButtons.Controls.Add(this.lblDatabasePath);
             this.flpButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.flpButtons.Location = new System.Drawing.Point(0, 541);
@@ -257,9 +278,24 @@ namespace OnlineAutoParking
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(160, 42);
             this.btnLogout.TabIndex = 3;
-            this.btnLogout.Text = "Chiqish";
+            this.btnLogout.Text = "Hisobdan chiqish";
             this.btnLogout.UseVisualStyleBackColor = false;
             this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
+            //
+            // btnExit
+            //
+            this.btnExit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
+            this.btnExit.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnExit.FlatAppearance.BorderSize = 0;
+            this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExit.ForeColor = System.Drawing.Color.White;
+            this.btnExit.Location = new System.Drawing.Point(724, 9);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(160, 42);
+            this.btnExit.TabIndex = 4;
+            this.btnExit.Text = "Dasturdan chiqish";
+            this.btnExit.UseVisualStyleBackColor = false;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             //
             // lblDatabasePath
             //
@@ -373,6 +409,7 @@ namespace OnlineAutoParking
         private System.Windows.Forms.Panel pnlHeader;
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Label lblSubtitle;
+        private System.Windows.Forms.Button btnRegister;
         private System.Windows.Forms.TableLayoutPanel tlpFilter;
         private System.Windows.Forms.Label lblStart;
         private System.Windows.Forms.DateTimePicker dtpStart;
@@ -385,6 +422,7 @@ namespace OnlineAutoParking
         private System.Windows.Forms.Button btnMyCars;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.Button btnLogout;
+        private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Label lblDatabasePath;
         private System.Windows.Forms.Panel pnlGrid;
         private System.Windows.Forms.DataGridView dgvParkingLots;

@@ -28,21 +28,14 @@ namespace OnlineAutoParking
                 return;
             }
 
-            // Kirish -> rolga qarab panel. Panel "Chiqish" tugmasi bilan yopilsa, yana kirish oynasi ochiladi.
+            // Dastur mehmon rejimida (parkinglar ro'yxati) ochiladi. Kirish/ro'yxatdan o'tish yoki "Chiqish"
+            // bajarilganda panel almashadi; oddiy yopilganda (X) dastur tugaydi.
             while (true)
             {
-                Models.User user;
-                using (var loginForm = new LoginForm())
-                {
-                    if (loginForm.ShowDialog() != DialogResult.OK)
-                    {
-                        return;
-                    }
-                    user = loginForm.AuthenticatedUser;
-                }
-
-                Session.Start(user);
-                Form panel = user.IsAdmin ? (Form)new AdminForm() : new MainForm();
+                Models.User user = Session.CurrentUser;
+                Form panel = user == null
+                    ? new MainForm()
+                    : (user.IsAdmin ? (Form)new AdminForm() : new MainForm());
                 Application.Run(panel);
 
                 if (!Session.LogoutRequested)

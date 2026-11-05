@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -23,8 +23,21 @@ namespace OnlineAutoParking
         private void MainForm_Load(object sender, EventArgs e)
         {
             lblDatabasePath.Text = "Baza: " + DatabaseHelper.DatabasePath;
-            lblSubtitle.Text = "Xush kelibsiz, " + Session.CurrentUser.FullName +
-                " (" + Session.CurrentUser.Username + ")  •  Avtoturargohni oldindan band qiling";
+            if (Session.IsGuest)
+            {
+                // Mehmon: faqat ro'yxatni ko'radi; bron va mashina amallari yashiriladi
+                lblSubtitle.Text = "Mehmon rejimi  •  Band qilish uchun ro‘yxatdan o‘ting yoki tizimga kiring";
+                btnBook.Visible = false;
+                btnMyCars.Visible = false;
+                btnLogout.Visible = false;
+                btnRegister.Visible = true;
+            }
+            else
+            {
+                lblSubtitle.Text = "Xush kelibsiz, " + Session.CurrentUser.FullName +
+                    " (" + Session.CurrentUser.Username + ")  •  Avtoturargohni oldindan band qiling";
+                btnRegister.Visible = false;
+            }
             SetDefaultInterval();
             LoadParkingLots();
         }
@@ -141,8 +154,26 @@ namespace OnlineAutoParking
             }
         }
 
+        private void btnRegister_Click(object sender, EventArgs e)
+        {
+            using (var loginForm = new LoginForm())
+            {
+                if (loginForm.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+                Session.StartAndRestart(loginForm.AuthenticatedUser);
+            }
+            Close();
+        }
+
         private void OpenBookingForm()
         {
+            if (Session.IsGuest)
+            {
+                return;
+            }
+
             ParkingLot lot = GetSelectedParkingLot();
             if (lot == null)
             {
@@ -182,6 +213,12 @@ namespace OnlineAutoParking
 
             // Bron qilingan yoki qilinmaganidan qat'i nazar, jadvalni yangilaymiz
             LoadParkingLots();
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            Session.RequestExit();
+            Close();
         }
 
         private void btnLogout_Click(object sender, EventArgs e)
